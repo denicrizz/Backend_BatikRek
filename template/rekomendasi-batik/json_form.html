@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batik Classifier</title>
+</head>
+<body>
+    <h1>Batik Classifier</h1>
+    <form id="batikForm">
+        <label for="name">Batik Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+        <label for="motif">Motif:</label>
+        <input type="text" id="motif" name="motif" required><br><br>
+        <button type="button" onclick="classifyBatik()">Classify</button>
+    </form>
+
+    <h2>Recommended Categories:</h2>
+    <p id="result"></p>
+
+    <script>
+        async function classifyBatik() {
+            const name = document.getElementById('name').value;
+            const motif = document.getElementById('motif').value;
+
+            const response = await fetch('/classify_batik/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name, motif }),
+            });
+
+            const data = await response.json();
+            document.getElementById('result').textContent = data.recommended_categories
+                ? data.recommended_categories.join(', ')
+                : data.error;
+        }
+    </script>
+</body>
+</html>
